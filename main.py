@@ -4,6 +4,8 @@ from controller import Controller, SourceType
 import time
 import threading
 
+threads = []
+
 class Thread(threading.Thread):
     def __init__(self, pad):
         threading.Thread.__init__(self)
@@ -13,13 +15,15 @@ class Thread(threading.Thread):
         
 
 def padSwap(pad):
-    for event in pad.ctrl.read_loop():
-        if event.code == 315 and event.value == 1:
-            print("Connected: " + pad.name)
+    try:
+        for event in pad.ctrl.read_loop():
+            if event.code == 315 and event.value == 1:
+                print("Connected: " + pad.name)
+    except:
+        pass
 
 def main():
     printCount = 0
-    threads = []
     while(True):
         controllers = [Controller(path, SourceType.USB) for path in evdev.list_devices()]
         if len(controllers) > 0:
